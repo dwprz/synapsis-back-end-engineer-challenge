@@ -1,0 +1,40 @@
+services:
+  synopsis-book-service:
+    container_name: synopsis-book-service
+    build: 
+      context:  ./
+      dockerfile: Dockerfile
+    image: synopsis-book-service:1.0.0
+    env_file:
+      - ./.env
+    ports:
+      - 2000:2000
+      - 2100:2100
+    networks:
+      - synopsis-book-managament-network
+  synopsis-book-service-postgres:
+    container_name: synopsis-book-service-postgres
+    image: postgres:16.0
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - type: volume
+        source: synopsis-book-service-postgres-data
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./doc/database/postgresql/postgresql.conf
+        target: /etc/postgresql/postgresql.conf
+    networks:
+      - synopsis-book-managament-network
+
+volumes:
+  synopsis-book-service-postgres-data:
+    name: synopsis-book-service-postgres-data
+
+networks:
+  synopsis-book-managament-network:
+    name: synopsis-book-managament-network
+    external: true

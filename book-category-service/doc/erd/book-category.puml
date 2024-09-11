@@ -1,0 +1,26 @@
+@startuml
+
+enum BookCategory {
+    FICTION
+    NON-FICTION
+    SCIENCE
+    HISTORY
+    BIOGRAPHY
+    TECHNOLOGY
+    FANTASY
+    MYSTERY
+    THRILLER
+    CHILDREN
+    YOUNG ADULT
+    ROMANCE
+    ADVENTURE
+}
+
+entity "book_categories" {
+    *category BookCategory <<not null>> <<PK>>,
+    *book_id INT <<not null>> <<PK>>,
+    --
+    created_at TIMESTAMP default(CURRENT_TIMESTAMP)
+}
+
+@enduml

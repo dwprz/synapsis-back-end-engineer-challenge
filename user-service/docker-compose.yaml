@@ -1,0 +1,171 @@
+services:
+  synopsis-user-service:
+    container_name: synopsis-user-service
+    build: 
+      context:  ./
+      dockerfile: Dockerfile
+    image: synopsis-user-service:1.0.0
+    env_file:
+      - ./.env
+    ports:
+      - 3000:3000
+  synopsis-user-service-postgres:
+    container_name: synopsis-user-service-postgres
+    image: postgres:16.0
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - type: volume
+        source: synopsis-user-service-postgres-data
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./doc/database/postgresql/postgresql.conf
+        target: /etc/postgresql/postgresql.conf
+
+  synopsis-user-service-redis-node-1:
+    container_name: synopsis-user-service-redis-node-1
+    image: redis:7.2.2
+    ports:
+      - 6371:6379
+      - 16371:16379
+    volumes:
+      - type: bind
+        source: ./doc/database/redis/redis-node-1.conf
+        target: /usr/local/etc/redis/redis.conf
+      - type: volume
+        source: synopsis-user-service-redis-data-node-1
+        target: /data
+    networks:
+      synopsis-book-managament-network:
+        ipv4_address: 172.48.0.11
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    restart: on-failure
+  synopsis-user-service-redis-node-2:
+    container_name: synopsis-user-service-redis-node-2
+    image: redis:7.2.2
+    ports:
+      - 6372:6379
+      - 16372:16379
+    volumes:
+      - type: bind
+        source: ./doc/database/redis/redis-node-2.conf
+        target: /usr/local/etc/redis/redis.conf
+      - type: volume
+        source: synopsis-user-service-redis-data-node-2
+        target: /data
+    networks:
+      synopsis-book-managament-network:
+        ipv4_address: 172.48.0.12
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    restart: on-failure
+
+  synopsis-user-service-redis-node-3:
+    container_name: synopsis-user-service-redis-node-3
+    image: redis:7.2.2
+    ports:
+      - 6373:6379
+      - 16373:16379
+    volumes:
+      - type: bind
+        source: ./doc/database/redis/redis-node-3.conf
+        target: /usr/local/etc/redis/redis.conf
+      - type: volume
+        source: synopsis-user-service-redis-data-node-3
+        target: /data
+    networks:
+      synopsis-book-managament-network:
+        ipv4_address: 172.48.0.13
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    restart: on-failure
+
+  synopsis-user-service-redis-node-4:
+    container_name: synopsis-user-service-redis-node-4
+    image: redis:7.2.2
+    ports:
+      - 6374:6379
+      - 16374:16379
+    volumes:
+      - type: bind
+        source: ./doc/database/redis/redis-node-4.conf
+        target: /usr/local/etc/redis/redis.conf
+      - type: volume
+        source: synopsis-user-service-redis-data-node-4
+        target: /data
+    networks:
+      synopsis-book-managament-network:
+        ipv4_address: 172.48.0.14
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    restart: on-failure
+
+  synopsis-user-service-redis-node-5:
+    container_name: synopsis-user-service-redis-node-5
+    image: redis:7.2.2
+    ports:
+      - 6375:6379
+      - 16375:16379
+    volumes:
+      - type: bind
+        source: ./doc/database/redis/redis-node-5.conf
+        target: /usr/local/etc/redis/redis.conf
+      - type: volume
+        source: synopsis-user-service-redis-data-node-5
+        target: /data
+    networks:
+      synopsis-book-managament-network:
+        ipv4_address: 172.48.0.15
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    restart: on-failure
+
+  synopsis-user-service-redis-node-6:
+    container_name: synopsis-user-service-redis-node-6
+    image: redis:7.2.2
+    ports:
+      - 6376:6379
+      - 16376:16379
+    volumes:
+      - type: bind
+        source: ./doc/database/redis/redis-node-6.conf
+        target: /usr/local/etc/redis/redis.conf
+      - type: volume
+        source: synopsis-user-service-redis-data-node-6
+        target: /data
+    networks:
+      synopsis-book-managament-network:
+        ipv4_address: 172.48.0.16
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    restart: on-failure
+
+  synopsis-user-service-redisinsight:
+    container_name: synopsis-user-service-redisinsight
+    image: redislabs/redisinsight:2.50
+    ports:
+      - 5540:5540
+    networks:
+      - synopsis-book-managament-network
+
+volumes:
+  synopsis-user-service-postgres-data:
+    name: synopsis-user-service-postgres-data
+  synopsis-user-service-redis-data-node-1:
+    name: synopsis-user-service-redis-data-node-1
+  synopsis-user-service-redis-data-node-2:
+    name: synopsis-user-service-redis-data-node-2
+  synopsis-user-service-redis-data-node-3:
+    name: synopsis-user-service-redis-data-node-3
+  synopsis-user-service-redis-data-node-4:
+    name: synopsis-user-service-redis-data-node-4
+  synopsis-user-service-redis-data-node-5:
+    name: synopsis-user-service-redis-data-node-5
+  synopsis-user-service-redis-data-node-6:
+    name: synopsis-user-service-redis-data-node-6
+
+networks:
+  synopsis-book-managament-network:
+    name: synopsis-book-managament-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet:  172.48.0.0/16

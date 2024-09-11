@@ -1,0 +1,23 @@
+@startuml
+
+entity "books" as Book {
+    *book_id SERIAL <<not null>> <<PK>>,
+    --
+    title VARCHAR(100) <<not null>> <<unique>>,
+    author VARCHAR(100) <<not null>>,
+    isbn VARCHAR(100) <<not null>>,
+    synopsis TEXT <<nullable>>,
+    published_year INTEGER <<not null>>,
+    stock INTEGER <<not null>>,
+    location VARCHAR(100) <<not null>> default('UNKNOWN'),
+    created_at TIMESTAMP default(CURRENT_TIMESTAMP),
+    updated_at TIMESTAMP default(CURRENT_TIMESTAMP)
+}
+
+entity "popular_title_keys" as PopularTitleKey (
+    title_key VARCHAR(100) <<not null>> <<PK>>,
+    --
+    total_search BIGINT <<not null>> default(1)
+)
+
+@enduml
