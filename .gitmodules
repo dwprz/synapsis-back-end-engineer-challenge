@@ -1,0 +1,3 @@
+[submodule "synapsis-book-management-proto"]
+	path = synapsis-book-management-proto
+	url = https://github.com/dwprz/synapsis-book-management-protobuf
